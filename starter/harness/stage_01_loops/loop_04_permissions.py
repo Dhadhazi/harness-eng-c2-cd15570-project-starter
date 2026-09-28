@@ -15,6 +15,15 @@ class PermissionsLoop(HarnessLoop):
         super().__init__(*args, **kwargs)
         self.permissions = PermissionPolicy()
 
+    @staticmethod
+    def _same_request(left: dict[str, Any] | None, right: dict[str, Any]) -> bool:
+        """Report whether a stored grant covers exactly this request."""
+        # TODO: A grant is scoped to one tool name and one argument object.
+        # Compare the stored request against the current one in full, so a
+        # grant for plot_data(plot_type="scatter") cannot authorize a later
+        # plot_data(plot_type="bar").
+        raise NotImplementedError("Compare a stored grant with the current request.")
+
     def before_tool_execution(
         self, tool_name: str, tool_input: dict[str, Any]
     ) -> str | None:
@@ -22,8 +31,9 @@ class PermissionsLoop(HarnessLoop):
         # deny. Log every decision. For deny, return a DENIED message. For
         # require_approval, save {"tool": tool_name, "input": tool_input} in
         # state.permission_request, set state.permission_required, and return
-        # a BLOCKED message. If state.granted_permission equals this exact
-        # request, clear that one-use grant and let the handler execute.
+        # a BLOCKED message. Use self._same_request against
+        # state.granted_permission first: on a match, clear that one-use grant
+        # and let the handler execute.
         raise NotImplementedError("Implement the Loop 04 permission check.")
 
     def pause_status(self) -> str | None:
