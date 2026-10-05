@@ -90,7 +90,7 @@ Before a protected call executes, pause and display its tool name and exact argu
 
 ### 5. Verify and preserve the evidence
 
-Run `pytest` while implementing the provided contracts. Baseline and prompt-routing tests should pass at the start; tests for Loops 02–04 expose unfinished TODOs and should pass after you implement them. Also inspect the live run evidence below. Keep the four answers, four prompt-file traces, retrospective JSON, relevant chart images, and a short comparison that cites what each component did.
+From the `starter/` directory, run `python -m pytest` while implementing the provided contracts. Baseline and prompt-routing tests should pass at the start; tests for Loops 02–04 expose unfinished TODOs and should pass after you implement them. Also inspect the live run evidence below. Keep the four answers, four prompt-file traces, retrospective JSON, relevant chart images, and a short comparison that cites what each component did.
 
 ## Run and show the loops
 
