@@ -1,20 +1,32 @@
-# Production Vehicle EDA Harness Rubric
+# Project Rubric
 
-## Project Rubric
+This is the student-facing copy of the classroom rubric. Reviewers grade the behavior shown by your saved runs and artifacts; a prompt that describes a control is not evidence that the control ran.
 
-Grade the behavior shown by the runs and their saved artifacts. A prompt that describes a control is not, by itself, evidence that the control ran. All four prompt-file runs must answer the same Cedar Lane Motors EDA question from `prompts/master_prompt.txt`; each loop-specific file supplies system instructions that make its added component observable. The selected `--prompt-file` chooses the loop. No separate `--loop` argument is used.
+## Run the Foundation
 
-| Criteria | Submission Requirements | Reviewer Tip |
-|---|---|---|
-| **Run the Default Loop Interactively** | Run `python main.py` and enter a free-form vehicle EDA question. Show more than one model cycle, at least one tool result returned to the model, and a completed answer. Submit the terminal record or `outputs/non-production/interactive/answer.md` and `tool_trace.json`. | **Pass if:** the default non-production loop takes the student's typed question and the trace shows the model continuing after a tool result. **Fail if:** the submission only shows a single model response or a prompt-file run. |
-| **Run the Non-Production Prompt** | Run `python main.py --prompt-file prompts/prompt_01_non_production.txt`. Show the answer and `outputs/non-production/prompt/tool_trace.json`. The trace must show a skill load, a plan approval before planned data analysis, registered EDA tool calls, and their results. | **Pass if:** the run answers the shared EDA question and the recorded order shows approval before planned EDA actions. **Fail if:** the answer is shown without tool and approval evidence, or analysis proceeds while plan approval is pending. |
-| **Show the Retrospective Evaluation** | Run `python main.py --prompt-file prompts/prompt_02_self_evaluation.txt`. Submit `outputs/self-evaluation/prompt/answer.md`, `tool_trace.json`, and `retrospective_evaluation.json`. The separate review must run after the primary task and include `task_status`, `efficiency_score`, `critique`, `systemic_failure_root_cause`, and `workflow_adjustments`. | **Pass if:** the structured evaluation reviews the completed run and is separate from the primary answer. **Fail if:** the review is missing, lacks required fields, or starts while the primary task is paused for approval. |
-| **Show Hooks and Antidotes** | Run `python main.py --prompt-file prompts/prompt_03_hooks.txt`. Submit `outputs/hooks/prompt/answer.md` and `tool_trace.json`. Show a pre-tool hook decision and post-chart antidote output with numeric chart evidence that the answer uses. Include the related chart artifact from `outputs/plots/`. | **Pass if:** the terminal or trace shows the hook being called, its decision, and deterministic evidence returned after `plot_data`. **Fail if:** safeguards appear only as prompt text or the answer makes chart claims without the recorded numeric evidence. The supplied prompt uses valid chart requests, so a blocked request is not required. |
-| **Show Scoped Permissions** | Run `python main.py --prompt-file prompts/prompt_04_permissions.txt`. Submit `outputs/permissions/prompt/answer.md` and `tool_trace.json`. Show an allowed read-only call and separate approval requests and grants for protected `plot_data` and `rank_inventory` calls. Each request must display its tool name and arguments; a grant must apply only to that exact call. | **Pass if:** the trace shows `allowed`, `approval_required`, and `granted` decisions and protected calls run only after their own approval. **Fail if:** a protected call runs before approval or a changed request reuses an earlier grant. The supplied prompt does not need to trigger a deny decision. |
-| **Compare the Four Runs** | Submit the four prompt-file answers and traces under `outputs/<loop>/prompt/`, the Loop 02 evaluation JSON, relevant chart files, and a short comparison. Identify each loop's added component, the exact terminal line or artifact that proves it ran, and its observed effect on the shared EDA task. | **Pass if:** the evidence can be matched to all four selected prompt files and the comparison explains what happened in each run. **Fail if:** a loop has no saved run evidence or the comparison substitutes intended behavior for observed behavior. |
+| Criteria | Meets Specifications |
+|---|---|
+| **Run the Default Loop Interactively** | - The run processes a free-form vehicle EDA question.<br>- The trace demonstrates more than one model cycle and at least one tool result returned to the model before the completed answer.<br>- **Evidence:** `outputs/non-production/interactive/answer.md` and `outputs/non-production/interactive/tool_trace.json`. |
+| **Run the Non-Production Prompt** | - The run answers the shared EDA question.<br>- The trace records a skill load and a plan approval occurring before any planned data analysis.<br>- The trace includes registered EDA tool calls and their corresponding results.<br>- **Evidence:** `outputs/non-production/prompt/answer.md` and `outputs/non-production/prompt/tool_trace.json`. |
 
-## Suggestions To Make Your Project Stand Out
+## Add Self-Evaluation and Hooks
 
-| Criteria | Submission Requirements | Reviewer Tip |
-|---|---|---|
-| **Optional Extensions** | Compare answer quality and tool use across loops; analyze recurring failures and which controls prevented them; track token or cost use; examine a data-quality limitation; or demonstrate that a changed protected request cannot use a previous grant. | **Optional:** these extensions are not required for a passing submission. Credit clear evidence and a useful conclusion. |
+| Criteria | Meets Specifications |
+|---|---|
+| **Show the Retrospective Evaluation** | - The primary task completes and generates an answer.<br>- A separate retrospective evaluation runs after the primary task.<br>- The evaluation JSON contains exactly five fields: `task_status` (SUCCESS, FAILED, or PARTIAL_SUCCESS), `efficiency_score` (0 to 1), `critique`, `systemic_failure_root_cause`, and `workflow_adjustments`.<br>- **Evidence:** `outputs/self-evaluation/prompt/answer.md`, `outputs/self-evaluation/prompt/tool_trace.json`, and `outputs/self-evaluation/prompt/retrospective_evaluation.json`. |
+| **Show Hooks and Antidotes** | - The trace records a pre-tool hook decision.<br>- After a `plot_data` call, an ANTIDOTE is recorded containing numeric evidence.<br>- The final answer utilizes the numeric evidence provided by the antidote.<br>- **Evidence:** `outputs/hooks/prompt/answer.md`, `outputs/hooks/prompt/tool_trace.json`, and the corresponding chart file in `outputs/plots/`. |
+
+## Add Permissions and Compare the Runs
+
+| Criteria | Meets Specifications |
+|---|---|
+| **Show Scoped Permissions** | - The trace shows an allowed read-only tool call (a permission entry with `"decision": "allow"`).<br>- The trace records separate `require_approval` and `granted` entries for the protected `plot_data` and `rank_inventory` tools.<br>- Each approval request displays the exact tool name and arguments, and the grant applies only to that specific request (one approval equals one use).<br>- **Evidence:** `outputs/permissions/prompt/answer.md` and `outputs/permissions/prompt/tool_trace.json`. |
+| **Compare the Four Runs** | - A short comparison document, saved as `outputs/comparison.md`, identifies the added component for each of the four loops.<br>- The comparison cites the exact terminal line or artifact proving the component ran and describes its observed effect on the shared EDA task.<br>- **Evidence:** `outputs/comparison.md`, the four `outputs/<loop>/prompt/` runs (answer + trace each), the Loop 02 `retrospective_evaluation.json`, and the charts in `outputs/plots/`. |
+
+## Suggestions to Make Your Project Stand Out
+
+1. **Ablation study and recommendation.** Compare the performance across all four loops and recommend a minimum-viable-harness configuration for Cedar Lane Motors.
+2. **Failure log.** Implement a structured log that captures and categorizes agent failures across runs.
+3. **Token and cost tracking.** Add a mechanism to track token usage and calculate the cost of each loop.
+4. **Data quality analysis.** Run the `data_quality_report` tool on `vehicle_sales_reviews.csv` (which contains deliberate issues) before the agent analyzes it.
+5. **Strict permission testing.** Write a custom test proving that if a protected argument changes, the agent cannot reuse an old approval grant.
